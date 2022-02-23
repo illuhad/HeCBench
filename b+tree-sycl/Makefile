@@ -6,7 +6,7 @@
 ifeq ($(VENDOR), codeplay)
 CC        = compute++
 else
-CC        = clang++
+CC=syclcc
 endif
 
 OPTIMIZE  = yes
@@ -29,13 +29,13 @@ GCC_TOOLCHAIN = "/auto/software/gcc/x86_64/gcc-9.1.0/"
 #===============================================================================
 
 # Standard Flags
-CFLAGS := -std=c++17 -Wall -I../include -I. -I./util/num -I./util/timer -I./kernel
+CFLAGS := -std=c++17 -Wno-everything -I../include -I. -I./util/num -I./util/timer -I./kernel
 
 ifeq ($(VENDOR), codeplay)
 CFLAGS += -I$(HOME)/computecpp/ComputeCpp-CE-2.7.0-x86_64-linux-gnu/include/ \
           -no-serial-memop -sycl -sycl-driver
 else
-CFLAGS += -fsycl
+CFLAGS += 
 endif
 
 # Linker Flags
@@ -46,13 +46,13 @@ LDFLAGS += -lComputeCpp
 endif
 
 ifeq ($(CUDA), yes)
-  CFLAGS += -fsycl-targets=nvptx64-nvidia-cuda-sycldevice \
+  CFLAGS += -targets=nvptx64-nvidia-cuda-sycldevice \
             -Xsycl-target-backend --cuda-gpu-arch=$(CUDA_ARCH) \
             --gcc-toolchain=$(GCC_TOOLCHAIN)
 endif
 
 ifeq ($(HIP), yes)
-  CFLAGS += -fsycl-targets=amdgcn-amd-amdhsa \
+  CFLAGS += -targets=amdgcn-amd-amdhsa \
 	    -Xsycl-target-backend --offload-arch=$(HIP_ARCH) 
 endif
 

@@ -3,7 +3,7 @@
 #===============================================================================
 
 # Compiler can be set below, or via environment variable
-CC        = clang++
+CC=syclcc
 OPTIMIZE  = yes
 DEBUG     = no
 
@@ -31,19 +31,19 @@ obj = $(c_source:.c=.o) $(sycl_source:.cpp=.o)
 
 # Standard Flags
 CFLAGS := -D__CUDACC__ -DINT \
-          -std=c++17 -Wall -I../include -fsycl
+          -std=c++17 -Wno-everything -I../include 
 
 # Linker Flags
 LDFLAGS = 
 
 ifeq ($(CUDA), yes)
-  CFLAGS += -fsycl-targets=nvptx64-nvidia-cuda-sycldevice \
+  CFLAGS += -targets=nvptx64-nvidia-cuda-sycldevice \
             -Xsycl-target-backend --cuda-gpu-arch=$(CUDA_ARCH) \
             --gcc-toolchain=$(GCC_TOOLCHAIN)
 endif
 
 ifeq ($(HIP), yes)
-  CFLAGS += -fsycl-targets=amdgcn-amd-amdhsa \
+  CFLAGS += -targets=amdgcn-amd-amdhsa \
 	    -Xsycl-target-backend --offload-arch=$(HIP_ARCH) 
 endif
 

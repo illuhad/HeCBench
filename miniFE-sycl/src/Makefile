@@ -12,7 +12,7 @@ MINIFE_MATRIX_TYPE = -DMINIFE_CSR_MATRIX
 
 #-----------------------------------------------------------------------
 CXX       = clang++
-CC        = clang++
+CC=syclcc
 OPTIMIZE  = yes
 DEBUG     = no
 GPU       = yes
@@ -23,16 +23,16 @@ HIP_ARCH  = gfx908
 GCC_TOOLCHAIN = "/auto/software/gcc/x86_64/gcc-9.1.0/"
 
 CPPFLAGS = -I. -I../utils -I../fem $(MINIFE_TYPES) -I../../include/ $(MINIFE_MATRIX_TYPE) \
-           -std=c++17 -Wall -fsycl
+           -std=c++17 -Wno-everything 
 
 ifeq ($(CUDA), yes)
-  CPPFLAGS += -fsycl-targets=nvptx64-nvidia-cuda-sycldevice \
+  CPPFLAGS += -targets=nvptx64-nvidia-cuda-sycldevice \
               -Xsycl-target-backend --cuda-gpu-arch=$(CUDA_ARCH) \
               --gcc-toolchain=$(GCC_TOOLCHAIN)
 endif
 
 ifeq ($(HIP), yes)
-  CPPFLAGS += -fsycl-targets=amdgcn-amd-amdhsa \
+  CPPFLAGS += -targets=amdgcn-amd-amdhsa \
 	      -Xsycl-target-backend --offload-arch=$(HIP_ARCH) 
 endif
 
