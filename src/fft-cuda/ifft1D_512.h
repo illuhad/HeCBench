@@ -16,6 +16,7 @@ __global__ void ifft1D_512 (T2* work)
   IFFT8( data );
 
   //itwiddle8( data, tid, 512 );
+  #pragma unroll
   for( int j = 1; j < 8; j++ )
       data[j] = cmplx_mul(data[j] , exp_i(((T)2*(T)M_PI*reversed[j]/(T)512)*(tid)) );
 
@@ -32,6 +33,7 @@ __global__ void ifft1D_512 (T2* work)
   IFFT8( data );
 
   //itwiddle8( data, hi, 64 );
+  #pragma unroll
   for( int j = 1; j < 8; j++ )
       data[j] = cmplx_mul(data[j] , exp_i(((T)2*(T)M_PI*reversed[j]/(T)64)*hi) );
 
